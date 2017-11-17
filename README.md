@@ -1,37 +1,76 @@
-## Welcome to GitHub Pages
+## Лабораторная работа
+Исследование Swarm-mode Docker
 
-You can use the [editor on GitHub](https://github.com/Afflya/swarm-mode/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Работу выполнил: А.И. Позняков, гр. 4645М 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+###Цель работы
 
-### Markdown
+Исследовать технологию Swarm mode в Docker 
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Задание
 
-```markdown
-Syntax highlighted code block
+В лабораторной работе необходимо выполнитьследующие действия:
 
-# Header 1
-## Header 2
-### Header 3
+- Запустить 3 Docker контейнера в режиме Docker Swarm-mode
+- Проанализировать результаты и сделать выводы
+- Отчетную документацию предоставить при помощи облачных технологий
 
-- Bulleted
-- List
+### Содержание
 
-1. Numbered
-2. List
+Для работы со Роем)использовался docker-machine. Для создания хостов с установленным на них Docker Engine использовался драйвер virtualbox
 
-**Bold** and _Italic_ and `Code` text
+Сначало были созданны будующие узлы роя при помощи команд:
 
-[Link](url) and ![Image](src)
+
+```
+docker-machine create -d virtualbox node1  
+docker-machine create -d virtualbox node2  
+docker-machine create -d virtualbox node3
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Информацию о созданных узлах можно вывести при помощи команды:
 
-### Jekyll Themes
+```
+docker-machine ls
+```
+![alt]({{ "/assets/images/docker-machine-ls.png" | absolute_url }})
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Afflya/swarm-mode/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Рисунок 1 - Информация о созданных узлах
 
-### Support or Contact
+Далее осуществлена инициализация роя с менеджером node1. Это было выполнено командой:
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+```
+docker swarm init --advertise-addr 192.168.99.100:2377
+```
+![alt]({{ "/assets/images/docker-swarm-init.png" | absolute_url }})
+
+Рисунок 2 - Инициализация роя с менеджером node1
+
+При инициализации, на экран была выведена команда для присодинения к этому рою новых узлов в качестве рабочих.
+
+При помощи этой команды к рою были присоединены node2 и node3
+
+
+![alt]({{ "/assets/images/node2-join.png" | absolute_url }})
+
+Рисунок 3 - Присоединение узла node2
+
+![alt]({{ "/assets/images/node3-join.png" | absolute_url }})
+
+Рисунок 4 - Присоединение узла node3
+
+В итоге, получен рой из 3 контейнеров, информацию о котором можно вывести командой:
+
+```
+docker node ls
+```
+![alt]({{ "/assets/images/docker-node-ls.png" | absolute_url }})
+
+Рисунок 5 - Информация о созданном рое из 3 контейнеров
+
+### Выводы
+
+1. Минимально рой контейнеров может состоять из 1 элемента
+2. Масштабируемость может доступна при 2 контейнерах;
+3. Высокая доступность обеспечивается при трех и более элементах
+
